@@ -113,7 +113,8 @@ npm run dist:win    # Windows portable exe and installer (run on Windows)
 npm run dist        # packages for the current OS
 ```
 
-Pushing a `v*` tag builds Windows, macOS and Linux packages in GitHub Actions and attaches them to a release.
+To publish a release, run the **build** workflow from the Actions tab with a release tag such as `v1.0.1` (or push a `v*` tag).
+GitHub Actions builds Windows, macOS and Linux packages and attaches them to the release.
 
 Other tools in the repo:
 
