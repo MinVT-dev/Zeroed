@@ -1,0 +1,10 @@
+const assert = require('assert');
+const { makeKey, verify } = require('../src/devauth');
+const k = makeKey('correct horse');
+assert.ok(verify('correct horse', k));
+assert.ok(!verify('wrong', k));
+assert.ok(!verify('', k));
+assert.ok(!verify('x', null));
+assert.notStrictEqual(makeKey('correct horse').hash, k.hash, 'salted');
+assert.ok(verify('solvra-dev', require('../src/devkey.json')), 'shipped default key matches');
+console.log('devauth tests passed');

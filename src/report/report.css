@@ -1,0 +1,16 @@
+@import url(../theme.css);
+html, body { margin: 0; background: transparent; overflow: hidden; font: 14px/1.4 var(--text); color: var(--fg); }
+.card { position: relative; margin: 6px; padding: 14px 16px 12px; background: var(--panel); border: 1px solid var(--edge); border-radius: var(--r); box-shadow: 0 6px 20px rgba(0, 0, 0, .5); }
+/* Optic corner bracket: the identity motif, marking this as a Zeroed readout. */
+.card::before { content: ''; position: absolute; top: 5px; left: 5px; width: 14px; height: 14px; border: 2px solid var(--signal); border-right: 0; border-bottom: 0; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+h1 { margin: 0; font: 700 22px/1.1 var(--label); letter-spacing: 0.01em; }
+.close { min-height: 32px; padding: 4px 12px; border: 1px solid var(--edge); border-radius: var(--r); background: var(--raised); color: var(--fg); font: 600 14px var(--text); cursor: pointer; }
+.close:hover { border-color: var(--fg); }
+.close:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.where { margin: 2px 0 8px; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.verdict { margin: 0 0 10px; font-weight: 600; font-size: 15px; }
+.verdict.alerted { color: var(--danger); }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; font-size: 13px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }

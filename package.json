@@ -1,0 +1,80 @@
+{
+  "name": "zeroed",
+  "version": "1.0.0",
+  "description": "Zeroed - a free crosshair overlay. Developed and maintained by Solvra Development.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/crosshair.test.js && node test/detector.test.js && node test/server.test.js && node test/devauth.test.js && node test/profiles.test.js && node test/report.test.js && node test/pages.test.js",
+    "gallery": "node server/server.js",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win --x64",
+    "dist:win:linux": "electron-builder --win portable --x64 -c.win.signAndEditExecutable=false",
+    "set-dev-key": "node scripts/set-dev-key.js",
+    "analyze": "node scripts/analyze-recording.js"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": {
+    "name": "Solvra Development"
+  },
+  "homepage": "https://github.com/MinVT-dev/Zeroed",
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "dev.solvra.zeroed",
+    "productName": "Zeroed",
+    "copyright": "Copyright \u00a9 2026 Solvra Development",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "icon": "build/icon.ico",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Zeroed-${version}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Zeroed-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Zeroed-Setup-${version}.exe"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png",
+      "category": "Utility"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.png",
+      "category": "public.app-category.utilities"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MinVT-dev/Zeroed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MinVT-dev/Zeroed/issues"
+  }
+}

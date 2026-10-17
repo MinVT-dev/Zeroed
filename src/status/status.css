@@ -1,0 +1,9 @@
+@import url(../theme.css);
+html, body { margin: 0; background: transparent; overflow: hidden; font: 13px/1 var(--text); }
+.badge { display: inline-flex; align-items: center; gap: 8px; margin: 4px; padding: 7px 11px; border-radius: var(--r); background: var(--panel); color: var(--fg); border: 1px solid var(--edge); white-space: nowrap; font: 600 15px/1 var(--label); letter-spacing: 0.02em; }
+/* Square state marker, same shape as the logo's aim point. Colour plus the label text carry the state. */
+.dot { width: 9px; height: 9px; border: 2px solid var(--muted); flex: none; }
+.watching .dot { background: var(--signal); border-color: var(--signal); }
+.error .dot { background: var(--danger); border-color: var(--danger); }
+.flash { background: var(--danger); border-color: var(--danger); color: var(--on-signal); }
+.flash .dot { background: var(--on-signal); border-color: var(--on-signal); }

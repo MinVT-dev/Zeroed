@@ -1,0 +1,144 @@
+/* Zeroed: tactical HUD. Tokens are the only place colours live. Dark-only on purpose: the app sits beside
+   full-screen games in dim rooms, and a bright window would flash the player. */
+@import url(../theme.css);
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--text); font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+
+/* Focus is always visible: 2px signal outline, offset so it never merges with a border. */
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+/* ---- Top bar ---- */
+.top { display: flex; align-items: center; gap: 20px; height: 56px; padding: 0 20px; background: var(--panel); border-bottom: 1px solid var(--rule); }
+.brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+.wordmark { font: 700 24px/1 var(--label); letter-spacing: 0.02em; }
+.profile-pick { display: flex; align-items: center; gap: 8px; color: var(--muted); font: 600 14px var(--label); text-transform: uppercase; letter-spacing: 0.04em; }
+.profile-pick select { min-width: 160px; text-transform: none; letter-spacing: 0; font: 500 15px var(--text); }
+
+/* Master switch: the one control that matters most from the top bar. */
+.master { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; min-height: 44px; }
+.master input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch { position: relative; width: 44px; height: 22px; border: 1px solid var(--edge); border-radius: var(--r); background: var(--bg); flex: none; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: var(--muted); border-radius: 1px; }
+.master input:checked + .switch { background: var(--signal); border-color: var(--signal); }
+.master input:checked + .switch::after { left: 25px; background: var(--on-signal); }
+.master input:focus-visible + .switch { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+/* ---- Shell ---- */
+.shell { display: grid; grid-template-columns: 196px 1fr; height: calc(100% - 56px); }
+.rail { display: flex; flex-direction: column; gap: 2px; padding: 16px 10px; background: var(--panel); border-right: 1px solid var(--rule); overflow-y: auto; }
+.nav { position: relative; text-align: left; padding: 10px 12px 10px 18px; min-height: 44px; border: 0; border-radius: var(--r); background: transparent; color: var(--muted); font: 600 17px var(--label); letter-spacing: 0.02em; cursor: pointer; }
+.nav:hover { color: var(--fg); background: var(--raised); }
+.nav[aria-current="page"] { color: var(--fg); background: var(--raised); }
+/* Bracket marker on the active section: the same optic corner used in the logo. */
+.nav[aria-current="page"]::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 10px; width: 6px; border: 2px solid var(--signal); border-right: 0; }
+.credit { margin-top: auto; padding: 12px 8px 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.credit strong { color: var(--fg); font-weight: 600; }
+
+main { overflow-y: auto; padding: 24px 32px 48px; }
+.page { max-width: 980px; }
+h1 { margin: 0 0 4px; font: 700 34px/1.1 var(--label); letter-spacing: 0.01em; }
+h2 { margin: 28px 0 10px; font: 600 20px/1.2 var(--label); letter-spacing: 0.02em; }
+.lead { margin: 6px 0 18px; color: var(--muted); max-width: 64ch; }
+.editing { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+.editing strong { color: var(--fg); }
+.hint { margin: 6px 0; color: var(--muted); font-size: 13px; }
+.hint.err { color: var(--danger); }
+.hint.ok { color: var(--fg); }
+
+/* ---- Groups and rows ---- */
+.group { margin: 0 0 18px; padding: 14px 16px 10px; border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); min-width: 0; }
+.group legend, .group > summary { padding: 0 6px; color: var(--muted); font: 600 14px var(--label); text-transform: uppercase; letter-spacing: 0.04em; }
+.group > summary { cursor: pointer; padding: 4px 6px; min-height: 32px; }
+details.group[open] > summary { margin-bottom: 8px; color: var(--fg); }
+.panel { margin: 18px 0; padding: 4px 16px 12px; border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); }
+.panel h2 { margin-top: 14px; }
+
+.row { display: flex; align-items: center; gap: 12px; margin: 8px 0; min-height: 36px; flex-wrap: wrap; }
+.row .lbl { flex: 0 0 180px; color: var(--muted); }
+.controls .row .lbl { flex-basis: 128px; } /* keeps label, slider and value on one line beside the preview */
+.row input[type=range] { flex: 1 1 160px; min-width: 120px; accent-color: var(--signal); height: 28px; }
+.row output { flex: 0 0 auto; min-width: 7ch; text-align: right; color: var(--fg); font-weight: 500; }
+.row.stack input:not([type]), .row.stack input[type=password] { flex: 1 1 200px; min-width: 0; }
+.row.actions { gap: 8px; }
+
+input:not([type]), input[type=password], select {
+  min-height: 36px; padding: 6px 10px; border: 1px solid var(--edge); border-radius: var(--r);
+  background: var(--bg); color: var(--fg); font: 500 15px var(--text);
+}
+input::placeholder { color: var(--muted); opacity: 1; }
+input[type=color] { width: 52px; height: 36px; padding: 2px; border: 1px solid var(--edge); border-radius: var(--r); background: var(--bg); cursor: pointer; }
+input.tick { width: 20px; height: 20px; accent-color: var(--signal); cursor: pointer; }
+.hk { width: 180px; text-align: center; cursor: pointer; }
+
+.btn { min-height: 36px; padding: 6px 14px; border: 1px solid var(--edge); border-radius: var(--r); background: var(--raised); color: var(--fg); font: 600 15px var(--text); cursor: pointer; }
+.btn:hover { border-color: var(--fg); }
+.btn:disabled { color: var(--muted); border-color: var(--rule); cursor: not-allowed; }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.btn.primary:hover { background: #FF7F3A; }
+.btn.primary:disabled { background: var(--raised); color: var(--muted); border-color: var(--rule); }
+.btn.danger { color: var(--danger); }
+
+/* Segmented radio group: native radios stay focusable and arrow-key operable. */
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--edge); border-radius: var(--r); overflow: hidden; margin: 4px 0 8px; }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: block; padding: 8px 16px; min-height: 36px; color: var(--muted); font: 600 16px var(--label); letter-spacing: 0.02em; border-right: 1px solid var(--rule); }
+.seg label:last-child span { border-right: 0; }
+.seg input:checked + span { background: var(--signal); color: var(--on-signal); }
+.seg input:focus-visible + span { outline: 2px solid var(--fg); outline-offset: -4px; }
+.seg.small span { padding: 5px 12px; font-size: 14px; min-height: 30px; }
+
+/* ---- Crosshair page ---- */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) 332px; gap: 24px; align-items: start; }
+.preview-col { position: sticky; top: 0; }
+/* Optic frame: corner brackets around the preview, the identity motif from the logo. */
+.optic { position: relative; padding: 14px; background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r); }
+.optic::before, .optic::after { content: ''; position: absolute; width: 22px; height: 22px; border: 2px solid var(--fg); pointer-events: none; }
+.optic::before { top: 6px; left: 6px; border-right: 0; border-bottom: 0; }
+.optic::after { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
+#preview { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 1px; }
+.preview-col .seg { margin-top: 12px; }
+
+/* ---- Lists ---- */
+.list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); }
+.list li { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.list li:last-child { border-bottom: 0; }
+.list .grow { flex: 1 1 200px; min-width: 0; }
+.list .title { font-weight: 600; overflow-wrap: anywhere; }
+.list .sub { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.list .empty { color: var(--muted); padding: 16px 14px; display: block; }
+.list.compact li { padding: 7px 14px; font-size: 14px; }
+.tag { padding: 2px 8px; border: 1px solid var(--signal); border-radius: var(--r); color: var(--signal); font: 600 13px var(--label); letter-spacing: 0.03em; text-transform: uppercase; }
+.tag.alert { border-color: var(--danger); color: var(--danger); }
+
+.reports li { align-items: flex-start; }
+.report-detail { flex-basis: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 16px; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--rule); font-size: 14px; }
+.report-detail dt { color: var(--muted); font-size: 13px; }
+.report-detail dd { margin: 0; font-weight: 600; }
+
+/* ---- Cheat hints status (focal point of that page) ---- */
+.status-block { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 16px; margin: 12px 0 8px; padding: 16px 18px; background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r); }
+.status-block strong { font: 700 26px/1.1 var(--label); letter-spacing: 0.01em; }
+.status-block p { grid-column: 1; margin: 0; color: var(--muted); }
+.status-block .master { grid-column: 2; grid-row: 1 / span 2; }
+.state-dot { display: inline-block; width: 12px; height: 12px; margin-right: 10px; border: 2px solid var(--muted); border-radius: 1px; vertical-align: 2px; }
+.state-dot.watching { background: var(--signal); border-color: var(--signal); }
+.state-dot.error { background: var(--danger); border-color: var(--danger); }
+
+/* ---- Narrow windows and 200% zoom ---- */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .rail { flex-direction: row; overflow-x: auto; padding: 6px 8px; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .nav { flex: none; padding: 8px 12px 8px 16px; }
+  .credit { display: none; }
+  main { padding: 18px 16px 40px; }
+  .split { grid-template-columns: 1fr; }
+  .preview-col { position: static; max-width: 360px; }
+  .row .lbl { flex-basis: 100%; }
+  .top { gap: 12px; padding: 0 12px; }
+  .profile-pick span { display: none; }
+}

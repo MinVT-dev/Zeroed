@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Zeroed match report</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'">
+<link rel="stylesheet" href="report.css">
+</head>
+<body>
+<article class="card" aria-labelledby="rTitle">
+  <header><h1 id="rTitle">Match report</h1><button id="close" class="close">Close</button></header>
+  <p class="where" id="rWhere"></p>
+  <p class="verdict" id="rVerdict" role="status">Loading report…</p>
+  <dl id="rStats"></dl>
+</article>
+<script src="../report.js"></script>
+<script src="report.js"></script>
+</body>
+</html>

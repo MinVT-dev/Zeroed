@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Zeroed</title>
+  <rect width="512" height="512" rx="44" fill="#161914"/>
+  <!-- optic-view corner brackets -->
+  <g fill="none" stroke="#E7E9E2" stroke-width="12" stroke-linecap="square" opacity="0.85">
+    <path d="M64 120 V64 H120"/><path d="M392 64 H448 V120"/>
+    <path d="M448 392 V448 H392"/><path d="M120 448 H64 V392"/>
+  </g>
+  <!-- the Z: two bars and a diagonal cut around the aim point -->
+  <g fill="#FF6A1A">
+    <rect x="128" y="128" width="256" height="52"/>
+    <rect x="128" y="332" width="256" height="52"/>
+    <polygon points="330.0,180.0 384.0,180.0 307.0,238.0 253.0,238.0"/>
+    <polygon points="205.0,274.0 259.0,274.0 182.0,332.0 128.0,332.0"/>
+    <rect x="245" y="245" width="22" height="22"/>
+  </g>
+</svg>

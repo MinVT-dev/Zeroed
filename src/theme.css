@@ -1,0 +1,23 @@
+/* Zeroed design tokens and fonts, shared by every window. See DESIGN.md. */
+@font-face { font-family: Barlow; src: url(assets/fonts/barlow-latin-400-normal.woff2) format('woff2'); font-weight: 400; }
+@font-face { font-family: Barlow; src: url(assets/fonts/barlow-latin-500-normal.woff2) format('woff2'); font-weight: 500; }
+@font-face { font-family: Barlow; src: url(assets/fonts/barlow-latin-600-normal.woff2) format('woff2'); font-weight: 600; }
+@font-face { font-family: 'Barlow Condensed'; src: url(assets/fonts/barlow-condensed-latin-600-normal.woff2) format('woff2'); font-weight: 600; }
+@font-face { font-family: 'Barlow Condensed'; src: url(assets/fonts/barlow-condensed-latin-700-normal.woff2) format('woff2'); font-weight: 700; }
+
+:root {
+  --bg: #0F110E;        /* olive-black, like instrument housings */
+  --panel: #161914;
+  --raised: #1E221C;
+  --rule: #2E352B;      /* dividers only (decorative) */
+  --edge: #6B7765;      /* control borders: 3:1+ against panel and raised */
+  --fg: #E7E9E2;        /* 14.5:1 on panel */
+  --muted: #A3AA9C;     /* 7.4:1 on panel */
+  --signal: #FF6A1A;    /* the one hot colour: active state, primary action, focus. 6.2:1 on panel */
+  --on-signal: #0F110E; /* text on signal: 6.6:1 */
+  --danger: #FF5A52;    /* alerts and errors only. 5.8:1 on panel */
+  --r: 2px;
+  --label: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --text: Barlow, 'Segoe UI', sans-serif;
+}
+

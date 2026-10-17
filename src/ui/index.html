@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zeroed</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="../assets/icon-32.png" alt="" width="28" height="28"><span class="wordmark">Zeroed</span></div>
+  <label class="profile-pick"><span>Profile</span><select id="topProfile" aria-label="Active profile"></select></label>
+  <label class="master"><input type="checkbox" id="visible"><span class="switch" aria-hidden="true"></span><span id="visibleLabel">Crosshair on</span></label>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Sections">
+    <button class="nav" data-page="crosshair" aria-current="page">Crosshair</button>
+    <button class="nav" data-page="profiles">Profiles</button>
+    <button class="nav" data-page="hints">Cheat hints</button>
+    <button class="nav" data-page="reports">Match reports</button>
+    <button class="nav" data-page="library">Library</button>
+    <button class="nav" data-page="settings">Settings</button>
+    <p class="credit">Developed and maintained by <strong>Solvra Development</strong></p>
+  </nav>
+
+  <main>
+    <!-- CROSSHAIR -->
+    <section class="page" id="page-crosshair" aria-labelledby="h-crosshair">
+      <h1 id="h-crosshair">Crosshair</h1>
+      <p class="editing" id="editingNote"></p>
+      <div class="split">
+        <div class="controls">
+          <fieldset class="group">
+            <legend>Shape</legend>
+            <div class="seg" role="radiogroup" aria-label="Shape" id="styleSeg">
+              <label><input type="radio" name="style" value="cross"><span>Cross</span></label>
+              <label><input type="radio" name="style" value="t"><span>T</span></label>
+              <label><input type="radio" name="style" value="dot"><span>Dot</span></label>
+              <label><input type="radio" name="style" value="circle"><span>Ring</span></label>
+              <label><input type="radio" name="style" value="image"><span>Image</span></label>
+            </div>
+            <div class="row" id="imageRow"><span class="lbl">Image file</span><button id="pickImage" class="btn">Choose image…</button></div>
+            <div id="shapeSliders"></div>
+          </fieldset>
+          <fieldset class="group">
+            <legend>Colour</legend>
+            <div class="row"><label class="lbl" for="color">Colour</label><input type="color" id="color"></div>
+            <div id="colorSliders"></div>
+            <div class="row"><label class="lbl" for="dot">Centre dot</label><input type="checkbox" id="dot" class="tick"></div>
+            <div class="row"><label class="lbl" for="outline">Outline</label><input type="checkbox" id="outline" class="tick"></div>
+            <div class="row"><label class="lbl" for="outlineColor">Outline colour</label><input type="color" id="outlineColor"></div>
+          </fieldset>
+          <fieldset class="group">
+            <legend>Position</legend>
+            <div id="posSliders"></div>
+            <div class="row"><span class="lbl"></span><button id="recenter" class="btn">Back to centre</button></div>
+          </fieldset>
+        </div>
+        <aside class="preview-col">
+          <div class="optic">
+            <canvas id="preview" width="300" height="300" aria-label="Crosshair preview"></canvas>
+          </div>
+          <div class="seg small" role="radiogroup" aria-label="Preview background">
+            <label><input type="radio" name="bg" value="dark" checked><span>Dark scene</span></label>
+            <label><input type="radio" name="bg" value="mid"><span>Mid</span></label>
+            <label><input type="radio" name="bg" value="light"><span>Bright</span></label>
+          </div>
+          <div class="row stack"><input id="presetName" placeholder="Name this crosshair" maxlength="40" aria-label="Crosshair name"><button id="savePreset" class="btn primary">Save to library</button></div>
+          <p class="hint" id="saveMsg" role="status"></p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- PROFILES -->
+    <section class="page" id="page-profiles" aria-labelledby="h-profiles" hidden>
+      <h1 id="h-profiles">Profiles</h1>
+      <p class="lead">Each profile keeps its own crosshair and cheat-hint settings. Zeroed switches to a profile when its game is the window in front.</p>
+      <div class="row"><label class="lbl" for="autoProfiles">Switch automatically</label><input type="checkbox" id="autoProfiles" class="tick"></div>
+      <div class="row"><label class="lbl" for="hideUnfocused">Only show over profiled games</label><input type="checkbox" id="hideUnfocused" class="tick"></div>
+      <p class="hint" id="fgNote" role="status"></p>
+
+      <h2>Your profiles</h2>
+      <ul class="list" id="profileList"></ul>
+
+      <form class="panel" id="profileForm" autocomplete="off">
+        <h2 id="profileFormTitle">New profile</h2>
+        <input type="hidden" id="pfId">
+        <div class="row"><label class="lbl" for="pfName">Name</label><input id="pfName" maxlength="40" placeholder="Game name" required></div>
+        <div class="row"><label class="lbl" for="pfMatch">Window contains</label><input id="pfMatch" maxlength="80" placeholder="Process or title text, e.g. RobloxPlayerBeta"></div>
+        <div class="row"><label class="lbl" for="pfWatch">Cheat hints watch</label>
+          <select id="pfWatch"><option value="game">This game's window</option><option value="screen">Whole screen</option></select></div>
+        <div class="row actions"><button type="submit" class="btn primary" id="pfSubmit">Create from current settings</button><button type="button" class="btn" id="pfCancel" hidden>Cancel</button></div>
+        <p class="hint" id="pfMsg" role="status"></p>
+      </form>
+      <p class="hint">Roblox runs every experience in one window called "Roblox", so a Roblox profile covers all Roblox games.</p>
+    </section>
+
+    <!-- CHEAT HINTS -->
+    <section class="page" id="page-hints" aria-labelledby="h-hints" hidden>
+      <h1 id="h-hints">Cheat hints</h1>
+      <div class="status-block" id="hintStatus">
+        <div><span class="state-dot" id="hintDot" aria-hidden="true"></span><strong id="hintState">Off</strong></div>
+        <p id="hintDetail" role="status"></p>
+        <label class="master inline"><input type="checkbox" id="detOn"><span class="switch" aria-hidden="true"></span><span>Watch for suspicious aim</span></label>
+      </div>
+      <p class="lead">Looks for repeated, unnaturally crisp camera snaps while you play or spectate. It reads pixels only and never touches the game. Expect false alarms: skilled players can trigger it, and it cannot say who.</p>
+
+      <fieldset class="group">
+        <legend>What to watch</legend>
+        <div class="row"><label class="lbl" for="detTarget">Source</label>
+          <select id="detTarget"><option value="screen">Whole screen</option><option value="window">One window (lighter)</option></select></div>
+        <div class="row" id="winRow"><label class="lbl" for="detWindow">Window</label><select id="detWindow"></select><button id="winRefresh" class="btn" aria-label="Refresh window list">Refresh</button></div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Sensitivity</legend>
+        <div class="seg" role="radiogroup" aria-label="Sensitivity">
+          <label><input type="radio" name="sens" value="low"><span>Low</span></label>
+          <label><input type="radio" name="sens" value="medium"><span>Medium</span></label>
+          <label><input type="radio" name="sens" value="high"><span>High</span></label>
+        </div>
+        <p class="hint" id="sensNote"></p>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Alerts</legend>
+        <div class="row"><label class="lbl" for="detBadge">Status badge</label><input type="checkbox" id="detBadge" class="tick"></div>
+        <div class="row"><label class="lbl" for="detSound">Alert sound</label><input type="checkbox" id="detSound" class="tick"></div>
+      </fieldset>
+
+      <details class="group adv" id="advanced">
+        <summary>Advanced tuning</summary>
+        <p class="hint">Changing any value switches sensitivity to Custom. These apply to the active profile.</p>
+        <div id="tuneSliders"></div>
+        <div class="row"><label class="lbl" for="tuneCentre">Snap with nothing at centre</label>
+          <select id="tuneCentre"><option value="half">Counts half</option><option value="full">Counts fully</option><option value="ignore">Doesn't count</option></select></div>
+        <div class="row"><label class="lbl" for="tuneCuts">Ignore scene cuts</label><input type="checkbox" id="tuneCuts" class="tick"></div>
+        <div class="row"><label class="lbl" for="tuneFps">Analysis frame rate</label>
+          <select id="tuneFps"><option value="30">Up to 30 per second</option><option value="15">Up to 15 per second (lighter)</option></select></div>
+        <div class="row"><span class="lbl"></span><button id="tuneReset" class="btn">Back to preset</button></div>
+      </details>
+
+      <h2>Recent alerts</h2>
+      <ul class="list compact" id="alertLog"></ul>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="page" id="page-reports" aria-labelledby="h-reports" hidden>
+      <h1 id="h-reports">Match reports</h1>
+      <p class="lead">A match is one continuous stretch of cheat hints watching. It ends when the game window closes, you switch profile, turn cheat hints off, or press End match.</p>
+      <div class="row"><label class="lbl" for="reportPopup">Pop up when a match ends</label><input type="checkbox" id="reportPopup" class="tick"></div>
+      <div class="row actions"><button id="endMatch" class="btn primary">End match now</button><button id="clearReports" class="btn">Clear history</button></div>
+      <p class="hint" id="matchNote" role="status"></p>
+      <ul class="list reports" id="reportList"></ul>
+    </section>
+
+    <!-- LIBRARY -->
+    <section class="page" id="page-library" aria-labelledby="h-library" hidden>
+      <h1 id="h-library">Library</h1>
+      <h2>Saved crosshairs</h2>
+      <ul class="list" id="presets"></ul>
+
+      <h2>Share</h2>
+      <div class="row actions"><button id="exportCode" class="btn">Copy share code</button><button id="exportFile" class="btn">Export file</button><button id="exportAll" class="btn">Export all saved</button><button id="importFile" class="btn">Import file</button></div>
+      <div class="row stack"><input id="code" placeholder="Paste a ZR1: share code" aria-label="Share code"><button id="importCode" class="btn primary">Import code</button></div>
+      <p class="hint" id="shareMsg" role="status"></p>
+
+      <details class="group">
+        <summary>Community gallery (needs a gallery server)</summary>
+        <p class="hint">Browse and publish share codes on a Zeroed gallery server. Public hosting is planned; for now, enter the address of a server you run.</p>
+        <div class="row stack"><input id="galUrl" placeholder="http://localhost:8787" aria-label="Gallery server address"><button id="galSave" class="btn">Use server</button></div>
+        <div class="row stack"><input id="galQ" placeholder="Search names or authors" aria-label="Search gallery"><select id="galSort" aria-label="Sort"><option value="new">Newest</option><option value="top">Top</option></select><button id="galGo" class="btn">Browse</button></div>
+        <ul class="list" id="galList"></ul>
+        <div class="row stack"><input id="galName" placeholder="Crosshair name" maxlength="40" aria-label="Name to publish"><input id="galAuthor" placeholder="Your name" maxlength="24" aria-label="Author"><button id="galPub" class="btn">Publish current</button></div>
+        <p class="hint" id="galMsg" role="status"></p>
+      </details>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" id="page-settings" aria-labelledby="h-settings" hidden>
+      <h1 id="h-settings">Settings</h1>
+      <fieldset class="group">
+        <legend>Screen</legend>
+        <div class="row"><label class="lbl" for="display">Show on</label><select id="display"></select></div>
+      </fieldset>
+      <fieldset class="group">
+        <legend>Hotkeys</legend>
+        <p class="hint">Click a box, then press the key combination.</p>
+        <div class="row"><label class="lbl" for="hk-toggle">Crosshair on/off</label><input id="hk-toggle" class="hk" data-k="toggle"></div>
+        <div class="row"><label class="lbl" for="hk-next">Next saved crosshair</label><input id="hk-next" class="hk" data-k="next"></div>
+        <div class="row"><label class="lbl" for="hk-prev">Previous saved crosshair</label><input id="hk-prev" class="hk" data-k="prev"></div>
+        <div class="row"><label class="lbl" for="hk-endMatch">End match and report</label><input id="hk-endMatch" class="hk" data-k="endMatch"></div>
+        <p class="hint" id="hkMsg" role="status"></p>
+      </fieldset>
+      <details class="group" id="dev">
+        <summary>Developer tools</summary>
+        <div id="devLocked">
+          <div class="row stack"><input id="devKey" type="password" placeholder="Developer key" autocomplete="off" aria-label="Developer key"><button id="devUnlock" class="btn">Unlock</button></div>
+        </div>
+        <div id="devOpen" hidden>
+          <div class="row"><label class="lbl" for="devDebug">Debug overlay</label><input type="checkbox" id="devDebug" class="tick"></div>
+          <p class="hint">Draws what cheat hints sees: motion region (blue), centre check (yellow), things moving on their own (red boxes), camera pan (green line) and live numbers. Needs cheat hints on. In window mode it assumes the game fills the screen.</p>
+          <div class="row"><label class="lbl" for="devOv">Override thresholds</label><input type="checkbox" id="devOv" class="tick"></div>
+          <div class="row"><label class="lbl" for="devSnaps">Snaps needed</label><input type="range" id="devSnaps" min="1" max="10" step="1"><output id="devSnapsO"></output></div>
+          <div class="row"><label class="lbl" for="devScore">Crispness needed</label><input type="range" id="devScore" min="0.5" max="0.95" step="0.05"><output id="devScoreO"></output></div>
+          <div class="row actions"><button id="devTest" class="btn">Fire test alert</button><button id="devLockBtn" class="btn">Lock</button></div>
+          <p class="hint">Developer settings reset when Zeroed restarts.</p>
+        </div>
+        <p class="hint" id="devMsg" role="status"></p>
+      </details>
+    </section>
+  </main>
+</div>
+<script src="../crosshair.js"></script>
+<script src="../detector.js"></script>
+<script src="../report.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
